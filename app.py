@@ -10,7 +10,7 @@ st.text("This is plain text")
 
 st.markdown("**This is bold text** and _this is italic text_.")
 
-st.video("C:/Users/hamid/Videos/minecraft1.mkv")
+st.video("https://youtu.be/A2WSZ3hfUzE?si=5gvehcTn6wftxXDv")
 
 st.button("Click Me")
 st.slider("Select a range", 0, 100)
