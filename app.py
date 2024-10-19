@@ -56,12 +56,11 @@ with col1:
     
         # Exit the loop if the 'q' key is pressed
         if cv2.waitKey(1) & 0xFF == ord('q'):
-    
             break
     
     # Release the webcam and close all windows
     cap.release()
-    cv2.destroyAllWindows()
+
     
     # @st.cache_data
     # def load_images_from_directory(directory):
