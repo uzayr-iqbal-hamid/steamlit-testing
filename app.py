@@ -19,44 +19,49 @@ with col1:
     st.markdown("<h2 style='text-align: center;'>Working Model</h2>", unsafe_allow_html=True)
     
      #Load the trained model and define the class names
-    model = load_model('model5.h5', compile=False)
-    class_labels  = ['airplane', 'automobile', 'bird', 'cat', 'deer', 'dog', 'frog', 'horse', 'ship', 'truck']
-    # Define a video processor class
-    class VideoProcessor(VideoProcessorBase):
-        def recv(self, frame):
-            img = frame.to_ndarray(format="bgr24")
+    model = load_model('model5.h5')
 
-            # Resize and normalize the frame to match model input requirements
-            resized_frame = cv2.resize(img, (32, 32))  # Adjust size based on your model's input shape
-            normalized_frame = resized_frame / 255.0  # Normalize to [0, 1]
-            
-            # Add batch dimension
-            normalized_frame = np.expand_dims(normalized_frame, axis=0)
-            
-            # Use the model to make predictions
-            predictions = model.predict(normalized_frame)
-            predicted_class = np.argmax(predictions)
-            label = class_names[predicted_class]
-            
-            # Display the prediction label on the frame
-            cv2.putText(img, f'Class: {label}', (10, 30), cv2.FONT_HERSHEY_SIMPLEX, 1, (255, 0, 0), 2)
-
-            return av.VideoFrame.from_ndarray(img, format="bgr24")
-
-    # Set up Streamlit application
-    st.title("Sentiment analysis with Webcam")
-
-    # Start the video stream
-    webrtc_streamer(
-        key="real-time-cifar10",
-        mode=WebRtcMode.SENDRECV,
-        video_processor_factory=VideoProcessor,
-        media_stream_constraints={
-            "video": {"width": 640, "height": 480, "frameRate": {"ideal": 15, "max": 30}},
-            "audio": False,
-        },
-        async_processing=True,
-    )
+# Define the labels for your classes (e.g., 10 classes for CIFAR-10)
+# Change this depending on your dataset
+    class_names = ['airplane', 'automobile', 'bird', 'cat', 'deer', 'dog', 'frog', 'horse', 'ship', 'truck']
+    
+    # Open webcam (or replace '0' with a video file path)
+    cap = cv2.VideoCapture(0)
+    while True:
+        # Capture frame-by-frame from webcam
+        ret, frame = cap.read()
+        if not ret:
+            break
+    
+        # Preprocess the frame (resize and normalize)
+        # Resize to match the input size of your CNN (e.g., 32x32 for CIFAR-10)
+        resized_frame = cv2.resize(frame, (32, 32))  # Change this size based on your model's input shape
+        normalized_frame = resized_frame / 255.0  # Normalize to [0, 1]
+        
+        # Add batch dimension (CNN expects batches, even if it's a single image)
+        normalized_frame = np.expand_dims(normalized_frame, axis=0)
+    
+        # Use the model to predict the class of the frame
+        predictions = model.predict(normalized_frame)
+        predicted_class = np.argmax(predictions)  # Get the class with the highest prediction score
+    
+        # Get the label of the predicted class
+        label = class_names[predicted_class]
+    
+        # Display the result on the frame
+        cv2.putText(frame, f'Class: {label}', (10, 30), cv2.FONT_HERSHEY_SIMPLEX, 1, (255, 0, 0), 2)
+    
+        # Show the frame with the prediction
+        cv2.imshow('Real-Time Classification', frame)
+    
+        # Exit the loop if the 'q' key is pressed
+        if cv2.waitKey(1) & 0xFF == ord('q'):
+    
+            break
+    
+    # Release the webcam and close all windows
+    cap.release()
+    cv2.destroyAllWindows()
     
     # @st.cache_data
     # def load_images_from_directory(directory):
