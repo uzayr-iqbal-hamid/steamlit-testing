@@ -20,7 +20,7 @@ with col1:
     
      #Load the trained model and define the class names
     model = load_model('model5.h5', compile=False)
-    class_labels  = ['Anger', 'Disgust', 'Fear', 'Happy', 'Neutral', 'Sadness', "Surprise"]
+    class_labels  = ['airplane', 'automobile', 'bird', 'cat', 'deer', 'dog', 'frog', 'horse', 'ship', 'truck']
     # Define a video processor class
     class VideoProcessor(VideoProcessorBase):
         def recv(self, frame):
