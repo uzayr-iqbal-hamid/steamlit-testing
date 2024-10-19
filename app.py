@@ -19,7 +19,7 @@ with col1:
     st.markdown("<h2 style='text-align: center;'>Working Model</h2>", unsafe_allow_html=True)
     
      #Load the trained model and define the class names
-    model = load_model('emotion.h5', compile=False)
+    model = load_model('model5.h5', compile=False)
     class_labels  = ['Anger', 'Disgust', 'Fear', 'Happy', 'Neutral', 'Sadness', "Surprise"]
     # Define a video processor class
     class VideoProcessor(VideoProcessorBase):
